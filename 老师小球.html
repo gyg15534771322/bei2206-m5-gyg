@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      button {
+        width: 500px;
+        height: 50px;
+        background-color: aliceblue;
+        border-radius: 25px;
+        margin: 15px;
+        cursor: pointer;
+        font-size: 20px;
+      }
+      button:active {
+        font-weight: bold;
+        background-color: rgb(172, 206, 235);
+      }
+      .box {
+        width: 1000px;
+        height: 600px;
+        margin: 20px;
+        border: solid 2px rgb(172, 206, 235);
+        background-color: rgb(8, 64, 6);
+        position: relative;
+      }
+      .box > .ball {
+        width: 45px;
+        height: 45px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        background: url(https://img1.baidu.com/it/u=3564269091,1143496370&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500)
+          no-repeat;
+        background-size: cover;
+        border-radius: 50%;
+      }
+      em {
+        display: block;
+        position: absolute;
+        width: 300px;
+        height: 30px;
+        background-color: rgba(182, 120, 44, 0.491);
+        top: 200px;
+        left: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <button>点击开始噢</button>
+    <div class="box">
+      <span class="ball"></span>
+      <em></em>
+    </div>
+    <script>
+      class Ball {
+        constructor() {
+          this.btn = document.querySelector("button");
+          this.box = document.querySelector(".box");
+          this.ball = document.querySelector(".ball");
+          this.em = document.querySelector("em");
+        
+          this.t = null;
+          //小球运动
+          this.Event();
+          //小方块跟随鼠标移动
+          this.move()
+        }
+        Event() {
+          this.btn.onclick = () => {
+            if (this.t) {
+              return;
+            }
+            let x = 1;
+            let y = 1;
+
+            let to = 200;
+
+            //大盒子边界
+            let max_X = this.box.offsetWidth - this.ball.offsetWidth;
+            let max_Y = this.box.offsetHeight - this.ball.offsetHeight;
+            this.t = setInterval(() => {
+
+
+               //小盒子边界
+              let x_l = this.em.offsetLeft - this.ball.offsetWidth;
+              let x_r = this.em.offsetLeft + this.em.offsetWidth;
+              let y_t = this.em.offsetTop - this.ball.offsetHeight;
+              let y_b = this.em.offsetTop + this.em.offsetHeight;
+
+               //大盒子边界反弹
+               //判断逻辑        
+              //  x=1;
+              //  如果x大于最大值,x=-1;
+              //  如果x小于0,x=1;
+              // 写法1变成随机数，小球运动就是随机的
+              if (this.ball.offsetLeft >= max_X) {
+                x =-(Math.floor(Math.random()*5)+1);
+              }
+              if (this.ball.offsetLeft <= 0) {
+                x = (Math.floor(Math.random()*5)+1);
+              }
+              if (this.ball.offsetTop >= max_Y) {
+                y = -(Math.floor(Math.random()*5)+1);
+
+              }
+              if (this.ball.offsetTop < 0) {
+                y = (Math.floor(Math.random()*5)+1);1;
+                
+              }
+              //小盒子边界反弹
+              if (
+                this.ball.offsetTop > y_t &&
+                this.ball.offsetTop < y_b &&
+                this.ball.offsetLeft > x_l &&
+                this.ball.offsetLeft < x_r
+              ) {
+                x *= -(Math.floor(Math.random()*5)+1);
+                y *= -(Math.floor(Math.random()*8)+1);
+              }
+
+
+
+              //小球的运动
+              this.ball.style.top = this.ball.offsetTop + y + "px";
+              this.ball.style.left = this.ball.offsetLeft + x + "px";
+            }, 1);
+          };
+        }
+
+
+        //小方块跟随鼠标移动
+       move(){
+         this.box.onmouseenter = () => {
+                    window.onmousemove = (e) => {
+                        let cli = e.clientX - this.box.offsetLeft - this.em.offsetWidth / 2
+                        let cli_y = e.clientY - this.box.offsetTop - this.em.offsetHeight / 2
+                        if (cli < 0) {
+                            cli = 0
+                        }
+                        if (cli + this.em.offsetWidth > this.box.offsetWidth) {
+                            cli = this.box.offsetWidth - this.em.offsetWidth
+                        }
+                        if (cli_y < 0) {
+                            cli_y = 0
+                        }
+                        if (cli_y + this.em.offsetHeight > this.box.offsetHeight) {
+                            cli_y = this.box.offsetHeight - this.em.offsetHeight
+                        }
+                        this.em.style.left = cli + 'px'
+                        this.em.style.top = cli_y + 'px'
+                    }
+                }
+       }
+       
+      }
+      new Ball();
+    </script>
+  </body>
+</html>
