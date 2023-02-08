@@ -7,6 +7,6 @@ const express = require("express")
 // 设置静态文件目录
 app.use(express.static('./dist'))
 
-http.listen(8020, "192.168.243.4", function () {
-    console.log("listening on 192.168.243.4:8020")
+http.listen(8020, "10.0.24.11", function () {
+    console.log("listening on 101.43.171.100:8020")
 })
